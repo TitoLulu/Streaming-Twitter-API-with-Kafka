@@ -11,7 +11,7 @@ def normalize_timestamp(time):
     return (time_value.strftime('%Y-%m-%d %H:%M%S'))
 
 def get_twitter_data(producer:str, topic_name:str):
-    res = api.search("QATAR WORLD CUP OR WORLD CUP 2022")
+    res = api.search_tweets("QATAR WORLD CUP OR WORLD CUP 2022")
     for i in res:
         record = ''
         record += str(i.user.id_str)
@@ -36,10 +36,10 @@ def schedule_work(producer: str, topic_name: str, interval: float):
 if __name__ == '__main__':
     config = configparser.ConfigParser()
     config.read('twitter.cfg')
-    consumer_key = config["AUTH"]["twitter_app_name"]
-    consumer_secret=config["AUTH"]["twitter_api_key"]
-    access_token=config["AUTH"]["twitter_api_secret"]
-    access_token_secret=config["AUTH"]["twitter_bearer_token"]
+    consumer_key = config["AUTH"]["twitter_api_key"]
+    consumer_secret=config["AUTH"]["twitter_api_secret"]
+    access_token=config["AUTH"]["twitter_api_access_token"]
+    access_token_secret=config["AUTH"]["twitter_api_access_secret"]
     auth = tweepy.OAuth1UserHandler(
         consumer_key, consumer_secret, access_token, access_token_secret
     )
