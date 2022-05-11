@@ -1,3 +1,4 @@
+from sys import api_version
 import tweepy
 import configparser
 import time
@@ -7,7 +8,7 @@ from datetime import datetime
 
 
 def normalize_timestamp(time):
-    time_value = datetime.strptime(time, '%Y-%m-%d %H:%M:%S')
+    time_value = datetime.strptime(time, '%Y-%m-%d %H:%M:%S%z')
     return (time_value.strftime('%Y-%m-%d %H:%M%S'))
 
 def get_twitter_data(producer:str, topic_name:str):
@@ -18,14 +19,15 @@ def get_twitter_data(producer:str, topic_name:str):
         record += ";"
         record += str(normalize_timestamp(str(i.created_at)))
         record += ";"
-        record += str(i,user.followers_count)
+        record += str(i.user.followers_count)
         record += ";"
         record += str(i.user.location)
         record += ";"
-        record += str(i.favorite_count)
+        record += str(i.user.favourites_count)
         record += ";"
         record += str(i.retweet_count)
         record += ";"
+        print(record)
         producer.send(topic_name,str.encode(record))
 
 def schedule_work(producer: str, topic_name: str, interval: float):
@@ -45,9 +47,9 @@ if __name__ == '__main__':
     )
 
     api = tweepy.API(auth)
-    producer = KafkaProducer(bootstrap_servers='localhost:9092')
+    producer = KafkaProducer(bootstrap_servers='localhost:9092', api_version='0.11.5')
     topic_name = 'worldcup 2022'
-    schedule_work(producer=producer, topic_name=topic_name, interval=60*0.1)
+    schedule_work(producer=producer, topic_name=topic_name, interval=120*0.1)
 
 
 

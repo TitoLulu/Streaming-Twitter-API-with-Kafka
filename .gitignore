@@ -8,3 +8,8 @@ env
 # ignore config files
 
 twitter.cfg
+
+target/
+project/
+.metals/
+.vscode/
